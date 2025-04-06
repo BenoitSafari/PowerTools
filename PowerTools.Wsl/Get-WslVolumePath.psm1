@@ -1,4 +1,5 @@
 function Get-WslVolumePath {
+    [CmdletBinding()]
     param (
         [Parameter(Mandatory=$false, Position=0)]
         [string]$DistributionName
@@ -31,7 +32,7 @@ function Get-WslVolumePath {
     if ($distro) {
         $Path = $distro.GetValue("BasePath")
         $Path = $Path -replace "^\\\\\?\\", ""
-        return $Path
+        return Get-ChildItem -Path $Path -Recurse -Filter *.vhdx | Select-Object -First 1 -ExpandProperty FullName
     } else {
         Write-Host "Could not find '${DistributionName}' volume file."
         return $null
